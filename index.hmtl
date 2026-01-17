@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💎 Diamond Casino Bets 💎</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+  body {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    background: radial-gradient(circle at top, #0a0a0a, #111);
+    color: #fff;
+  }
+
+  header {
+    text-align: center;
+    padding: 25px;
+    font-size: 2.5em;
+    color: #ffd700;
+    text-shadow: 0 0 10px #fff, 0 0 20px #0ff, 0 0 30px #0ff;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+
+  .bet-card {
+    background: #111;
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    width: 250px;
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .bet-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ffd700;
+  }
+
+  .bet-card h2 {
+    color: #0ff;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px #0ff;
+  }
+
+  .bet-card button {
+    padding: 12px 22px;
+    font-size: 1em;
+    background: #ffd700;
+    color: #111;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+
+  .bet-card button:hover {
+    background: #fff;
+    color: #000;
+  }
+
+  .result {
+    margin-top: 12px;
+    font-size: 1.2em;
+    font-weight: bold;
+    height: 1.5em;
+  }
+
+  .leaderboard {
+    max-width: 600px;
+    margin: 40px auto;
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    padding: 20px;
+    background: #111;
+  }
+
+  .leaderboard h2 {
+    text-align: center;
+    color: #0ff;
+    text-shadow: 0 0 5px #0ff;
+  }
+
+  .leaderboard ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .leaderboard li {
+    padding: 5px 0;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    border-bottom: 1px solid #333;
+  }
+
+  /* Slot animation */
+  .slot-reel {
+    font-size: 2em;
+    margin-top: 10px;
+    height: 1.5em;
+  }
+
+</style>
+</head>
+<body>
+
+<header>💎 Diamond Casino Bets 💎</header>
+
+<div class="container">
+  <!-- Roulette Card -->
+  <div class="bet-card">
+    <h2>Roulette</h2>
+    <button onclick="placeBet('Roulette')">Bet 100 Diamonds</button>
+    <div class="result" id="result-roulette"></div>
+  </div>
+
+  <!-- Slots Card -->
+  <div class="bet-card">
+    <h2>Slots</h2>
+    <button onclick="placeBet('Slots')">Bet 100 Diamonds</button>
+    <div class="slot-reel" id="slot-reel">🎰 🎰 🎰</div>
+    <div class="result" id="result-slots"></div>
+  </div>
+
+  <!-- Blackjack Card -->
+  <div class="bet-card">
+    <h2>Blackjack</h2>
+    <button onclick="placeBet('Blackjack')">Bet 100 Diamonds</button>
+    <div class="result" id="result-blackjack"></div>
+  </div>
+</div>
+
+<div class="leaderboard">
+  <h2>Top Winners 💎</h2>
+  <ul id="leaderboard">
+    <li>Player1 <span>500 Diamonds</span></li>
+    <li>Player2 <span>400 Diamonds</span></li>
+    <li>Player3 <span>300 Diamonds</span></li>
+  </ul>
+</div>
+
+<script>
+  const leaderboard = [
+    {name: "Player1", diamonds: 500},
+    {name: "Player2", diamonds: 400},
+    {name: "Player3", diamonds: 300}
+  ];
+
+  const slotEmojis = ['🍒','🍋','🔔','💎','7️⃣','🍀'];
+
+  function randomWinLose() {
+    return Math.random() > 0.5 ? "Win +100 Diamonds!" : "Lose -100 Diamonds!";
+  }
+
+  function spinSlots() {
+    return Array(3).fill().map(() => slotEmojis[Math.floor(Math.random() * slotEmojis.length)]).join(' ');
+  }
+
+  function placeBet(game) {
+    let resultText = randomWinLose();
+
+    if (game === 'Slots') {
+      const reel = document.getElementById('slot-reel');
+      let count = 0;
+      const interval = setInterval(() => {
+        reel.textContent = spinSlots();
+        count++;
+        if (count > 10) {
+          clearInterval(interval);
+          document.getElementById('result-slots').innerText = resultText;
+          updateLeaderboard(resultText);
+        }
+      }, 100);
+    } else {
+      document.getElementById('result-' + game.toLowerCase()).innerText = resultText;
+      updateLeaderboard(resultText);
+    }
+  }
+
+  function updateLeaderboard(resultText) {
+    if (resultText.includes("Win")) {
+      const player = {name: "You", diamonds: 100};
+      leaderboard.push(player);
+      leaderboard.sort((a,b)=>b.diamonds-a.diamonds);
+      const list = document.getElementById('leaderboard');
+      list.innerHTML = "";
+      leaderboard.slice(0,5).forEach(p => {
+        const li = document.createElement('li');
+        li.innerHTML = `${p.name} <span>${p.diamonds} Diamonds</span>`;
+        list.appendChild(li);
+      });
+    }
+  }
+</script>
+
+</body>
+</html>
